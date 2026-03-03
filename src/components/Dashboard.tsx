@@ -11,6 +11,9 @@ const CATEGORY_COLORS: Record<string, string> = {
     'Döviz': '#10B981',
     'Kripto': '#8B5CF6',
     'Gayrimenkul': '#EF4444',
+    'Bireysel Emeklilik': '#F472B6', // Pink
+    'Borç': '#6B7280',               // Gray (since it reduces net worth, but as category it shows up here. Note: Pie chart will just show absolute value if we want, or we filter out debts from pie chart? Let's just use absolute value for pie chart or filter out)
+    'Alacak': '#14B8A6',             // Teal
     'Manuel': '#6B7280',
 };
 
@@ -18,9 +21,10 @@ export function Dashboard() {
     const { stats, assets } = useAssets();
     const isProfit = stats.totalProfitLoss >= 0;
 
-    // Calculate distribution data based on current assets
+    // Calculate distribution data based on current assets (excluding debts to avoid messing up pie chart, or convert to absolute value). Let's use absolute value but maybe skip debts for "varlık dağılımı" (asset distribution) since debt is a liability. Or subtract. Better to skip Borç from Pie Chart.
     const distributionMap = new Map<string, number>();
     assets.forEach(asset => {
+        if (asset.category === 'Borç') return; // Do not show Debt in specific Asset pie chart
         const current = distributionMap.get(asset.category) || 0;
         distributionMap.set(asset.category, current + asset.totalValue);
     });

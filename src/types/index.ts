@@ -1,4 +1,4 @@
-export type AssetCategory = 'Altın' | 'Hisse' | 'Döviz' | 'Kripto' | 'Gayrimenkul' | 'Manuel';
+export type AssetCategory = 'Altın' | 'Hisse' | 'Döviz' | 'Kripto' | 'Gayrimenkul' | 'Bireysel Emeklilik' | 'Borç' | 'Alacak' | 'Manuel';
 
 export interface Asset {
     id: string;

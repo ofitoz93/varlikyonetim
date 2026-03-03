@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { LayoutDashboard, Wallet, TrendingUp, Settings, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { LayoutDashboard, Wallet, TrendingUp, Settings, Menu, X, Moon, Sun } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface SidebarProps {
@@ -9,6 +9,28 @@ interface SidebarProps {
 
 export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDark, setIsDark] = useState(false);
+
+    useEffect(() => {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            setIsDark(true);
+        } else if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+            setIsDark(false);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+            setIsDark(true);
+        }
+    }, []);
+
+    const toggleDark = () => {
+        const next = !isDark;
+        setIsDark(next);
+        document.documentElement.classList.toggle('dark', next);
+        localStorage.setItem('theme', next ? 'dark' : 'light');
+    };
 
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -27,12 +49,17 @@ export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
             {/* Mobile Top Bar */}
             <div className="md:hidden flex items-center justify-between p-4 bg-card border-b border-border text-card-foreground">
                 <div className="font-bold text-xl tracking-tight text-primary">VarlıkTakip</div>
-                <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2 rounded-md hover:bg-muted text-muted-foreground"
-                >
-                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={toggleDark} className="p-2 rounded-md hover:bg-muted text-muted-foreground mr-1">
+                        {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="p-2 rounded-md hover:bg-muted text-muted-foreground"
+                    >
+                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {/* Sidebar Container */}
@@ -65,14 +92,19 @@ export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                 </nav>
 
                 <div className="p-6 border-t border-border mt-auto">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                            OF
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                OF
+                            </div>
+                            <div className="text-sm">
+                                <p className="font-medium text-foreground">Özhan Fitoz</p>
+                                <p className="text-muted-foreground text-xs">Premium Plan</p>
+                            </div>
                         </div>
-                        <div className="text-sm">
-                            <p className="font-medium text-foreground">Özhan Fitoz</p>
-                            <p className="text-muted-foreground text-xs">Premium Plan</p>
-                        </div>
+                        <button onClick={toggleDark} className="p-2 rounded-md hover:bg-muted text-muted-foreground transition-colors">
+                            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
                     </div>
                 </div>
             </div>

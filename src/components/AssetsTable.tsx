@@ -3,9 +3,11 @@ import { Plus, Trash2, ExternalLink, RefreshCw } from 'lucide-react';
 import { useAssets } from '../context/AssetContext';
 import { cn } from '../lib/utils';
 import { AddAssetModal } from './AddAssetModal';
+import { AddDebtCreditModal } from './AddDebtCreditModal';
 
 export function AssetsTable() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
+    const [isDebtModalOpen, setIsDebtModalOpen] = useState(false);
     const { assets, removeAsset, refreshPrices, isRefreshing } = useAssets();
 
     return (
@@ -22,7 +24,14 @@ export function AssetsTable() {
                         <span className="hidden sm:inline">Fiyatları Güncelle</span>
                     </button>
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setIsDebtModalOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors shadow-sm font-medium"
+                    >
+                        <Plus size={20} />
+                        <span className="hidden sm:inline">Borç / Alacak Ekle</span>
+                    </button>
+                    <button
+                        onClick={() => setIsAssetModalOpen(true)}
                         className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
                     >
                         <Plus size={20} />
@@ -113,8 +122,12 @@ export function AssetsTable() {
             </div>
 
             <AddAssetModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isAssetModalOpen}
+                onClose={() => setIsAssetModalOpen(false)}
+            />
+            <AddDebtCreditModal
+                isOpen={isDebtModalOpen}
+                onClose={() => setIsDebtModalOpen(false)}
             />
         </div>
     );
